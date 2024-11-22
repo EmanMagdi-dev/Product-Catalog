@@ -1,0 +1,143 @@
+﻿@{
+    var jsonCategories = Context.Session.GetString("Categories");
+    var categories = string.IsNullOrEmpty(jsonCategories)
+        ? new List<SelectListItem>()
+        : System.Text.Json.JsonSerializer.Deserialize<List<SelectListItem>>(jsonCategories);
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Product_Catalog</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3 ">
+            <div class="container-fluid">
+                <button class="openbtn" onclick="openNav()">☰</button>
+                <a class="navbar-brand " asp-area="" asp-controller="Home" asp-action="Index">
+                    <img class="img-fluid" src="~/Images/Product_Catalog__4_-removebg-preview (1).png" alt="HTML tutorial" style="width: 200px; height: 40px; border: 0; margin: -20px -20px -20px 10px;">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between text-light">
+                    <ul class="navbar-nav flex-grow-1 text-white" style="color:white">
+                        <li class="nav-item text-white" style="color:white">
+                            <a style="color:white" class="nav-link text-dark" asp-area="Index" asp-controller="Product" asp-action="Index">Home</a>
+                        </li>
+                      
+                        <form class="d-flex">
+                            <button class="btn btn-outline-success" type="submit" style="background-color:#FF9933"><i class="fa fa-search"></i></button>
+
+                            <input class="form-control me-2" id="searchTerm" type="search" placeholder="Search" aria-label="Search" style="width:400px">
+                        </form>
+                        <li class="nav-item dropdown">
+
+                            <div class="form-group">
+
+                                <select class="form-control" asp-items="@categories" onchange="filter()" id="filter"></select>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid">
+
+        <div id="mySidebar" class="sidebar" style="z-index:1000">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+            <a asp-action="Login" asp-controller="Account">Login</a>
+            <a asp-action="Index" asp-controller="Admin">Dashboard</a>
+            <a asp-action="Register" asp-controller="Account">Register</a>
+            <a asp-action="signOut" asp-controller="Account">singOut</a>
+
+        </div>
+
+        <div id="main">
+
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+    <footer class="border-top footer bg-black text-white">
+        <div class="container">
+            &copy; 2024 - Product_Catalog
+        </div>
+    </footer>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+
+<script>
+    function openNav() {
+        document.getElementById("mySidebar").style.width = "200px";
+        //document.getElementById("main").style.marginLeft = "250px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidebar").style.width = "0";
+        document.getElementById("main").style.marginLeft = "0";
+    }
+</script>
+
+<script>
+    document.getElementById('searchTerm').addEventListener('keyup', function () {
+        const searchTerm = this.value;
+        $.ajax({
+            url: '@Url.Action("SearchProducts", "Product")',
+            type: "GET",
+            data: { searchTerm: searchTerm },
+            success: function (data) {
+                console.log(data);
+                const products = JSON.stringify(data);
+                const url = '/product/searchResult?products=' + encodeURIComponent(products);
+                window.location.href = url;
+
+            },
+            error: function (xhr, exception) {
+                console.log("error");
+
+            }
+        });
+    });
+
+    function filter() {
+        console.log($("#filter").val());
+        var searchTerm = $("#filter").val();
+        $.ajax({
+            url: '@Url.Action("SearchProductsbyCat", "Product")',
+            type: "GET",
+            data: { id: searchTerm },
+            success: function (data) {
+                console.log(data);
+                const products = JSON.stringify(data);
+                const url = '/product/searchResult?products=' + encodeURIComponent(products);
+                window.location.href = url;
+
+            },
+            error: function (xhr, exception) {
+                console.log("error");
+
+            }
+        });
+    }
+</script>
+</body>
+
+</html>
+
+

@@ -1,0 +1,121 @@
+﻿@model Product_Catalog.DTOs.ProductDTO
+
+@{
+
+    var jsonCategories = Context.Session.GetString("Categories");
+    var categories = string.IsNullOrEmpty(jsonCategories)
+        ? new List<SelectListItem>()
+        : System.Text.Json.JsonSerializer.Deserialize<List<SelectListItem>>(jsonCategories);
+
+}
+<link href="~/css/FormStyle.css" rel="stylesheet" />
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="w-100" style="max-width: 600px;">
+        <h4>Edit Form</h4>
+
+        <hr />
+        <div class="row ">
+            <div class="col-md-12">
+                <form asp-action="Edit" enctype="multipart/form-data" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CreationDate" class="control-label"></label>
+                        <input asp-for="CreationDate" class="form-control" />
+                        <span asp-validation-for="CreationDate" class="text-danger"></span>
+                    </div>
+                 @*    <div class="form-group">
+                        <label asp-for="CreatedByUserId" class="control-label"></label>
+                        <input asp-for="CreatedByUserId" class="form-control" />
+                        <span asp-validation-for="CreatedByUserId" class="text-danger"></span>
+                    </div> *@
+                    <div class="form-group">
+                        <label asp-for="StartDate" class="control-label"></label>
+                        <input asp-for="StartDate" class="form-control" />
+                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Duration" class="control-label"></label>
+                        <input asp-for="Duration" class="form-control" />
+                        <span asp-validation-for="Duration" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Price" class="control-label"></label>
+                        <input asp-for="Price" class="form-control" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <img src="@Model.ImagePath" alt="Uploaded Image" class="img-thumbnail" style="max-width: 200px;" />
+
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ImagePath" class="control-label">Upload Image</label>
+                        <input type="file" name="ImagePath" asp-for="ImagePath" class="form-control" onchange="previewImage(event)" />
+                        <span asp-validation-for="ImagePath" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+               
+                        <label asp-for="CategoryId" class="control-label">Category</label>
+                        <select asp-for="CategoryId" class="form-control" asp-items="@categories"></select>
+                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <a asp-action="Index" asp-controller="Admin" class="btn">Back</a>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function previewImage(inputElement) {
+            var file = inputElement.files[0];
+
+            if (file) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    // Ensure the element is present before assigning src
+                    var imageElement = document.getElementById('uploadedImage');
+                    if (imageElement) {
+                        imageElement.src = e.target.result;
+                    } else {
+                        console.error('Image element not found!');
+                    }
+                };
+
+                // Read the selected file as a data URL
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Attach the function to the file input onload event
+        var fileInput = document.querySelector('[name="ImagePath"]');
+        if (fileInput) {
+            fileInput.addEventListener('change', function (event) {
+                previewImage(event.target);
+            });
+        }
+    });
+</script>
+

@@ -1,0 +1,109 @@
+﻿
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.wrapper {
+    background: #fff;
+    width: 100%;
+    max-width: 400px;
+    padding: 40px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+
+form .row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+   
+    form .row i {
+        position: absolute;
+        left: 10px;
+        color: #888;
+    }
+
+    form .row input {
+        width: 100%;
+        padding: 15px 10px;
+        padding-left: 40px; 
+        border-radius: 5px;
+        border: 2px solid #ccc;
+        font-size: 16px;
+        outline: none;
+    }
+
+        form .row input:focus {
+            border-color: #FF9933; 
+        }
+
+        form .row input::placeholder {
+            color: #888;
+        }
+
+   
+    form .row.button input {
+        background: #FF9933;
+        color: white;
+        border: none;
+        padding: 15px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+        form .row.button input:hover {
+            background: #FF4500;
+        }
+
+
+.pass, .signup-link {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+    .pass a, .signup-link a {
+        color: #FF4500;
+        text-decoration: none;
+    }
+
+        .pass a:hover, .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+span {
+    display: block; /* Makes the span element behave like a block */
+    color: red;
+    font-size: 14px;
+    margin-top: 5px; /* Adds spacing between the input field and error message */
+    font-style: italic;
+}
+input {
+    display: block;
+}

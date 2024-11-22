@@ -1,0 +1,148 @@
+﻿@model IEnumerable<Product_Catalog.DTOs.ProductDTO>
+
+@{
+    ViewData["Title"] = "Index";
+
+    int currentPage = ViewBag.CurrentPage;
+    int pageSize = ViewBag.PageSize;
+    var products = Model;
+}
+<style>
+    .modal-header {
+        background-color: #FF9933 !important;
+    }
+
+    #Name {
+        background-color: #FF9933 !important;
+    }
+
+    input {
+        border: 0px;
+    }
+
+    button {
+        background-color: #FF9933;
+    }
+</style>
+<div id="originalProductList">
+
+    <div class="container">
+        <div class="row g-3">
+            @foreach (var item in products)
+            {
+
+                <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+                    <div class="card h-100 text-center">
+                        <img src="@(Url.Content(item.ImagePath))" alt="Uploaded Image" class="img-thumbnail card-img-to" style="max-width:200px;" />
+                        
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Name</h5>
+                            <span class="card-text">Category: @item.CategoryName</span>
+                            <p class="card-text">Offer Duration: @item.Duration</p>
+                            <span class="card-text">@item.Price EGP</span>
+                            <a href="#" class="btn btn-primary" style="background-color:#FF9933" onclick="viewDetails(@item.Id)">View Details</a>
+                        </div>
+                    </div>
+                </div>
+
+            }
+        </div>
+        <div class="pagination m-5 p-5 justify-content-center">
+            <a asp-action="Index" asp-route-pageNumber="@(currentPage - 1)" asp-route-pageSize="@pageSize"
+               class="btn @(currentPage == 1 ? "disabled" : "")" style="background-color:#FF9933">Previous</a>
+            <span>Page @currentPage</span>
+            <a asp-action="Index" asp-route-pageNumber="@(currentPage + 1)" asp-route-pageSize="@pageSize"
+               class="btn @(ViewData["HasNextPage"] as bool? == true ? "" : "disabled")" style="background-color:#FF9933">Next</a>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <h5 class="modal-title mx-auto"><input class="text-center" type="text" id="Name"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="Close()"></button>
+            </div>
+            <div class="modal-body" style="border:0px">
+                <table class="table">
+
+                    <tr>
+                        <td>Category Name</td>
+                        <td><input class="justify-content-center" type="text" id="CatName"></td>
+                    </tr>
+                    <tr>
+                        <td>Creation Date</td>
+                        <td><input type="text" id="Creation"></td>
+                    </tr>
+                    <tr>
+                        <td>Start Date</td>
+                        <td> <input type="text" id="Start"></td>
+                    </tr>
+                    <tr>
+                        <td>Duration</td>
+                        <td> <input type="text" id="Duration"></td>
+                    </tr>
+                    <tr>
+                        <td>Price</td>
+                        <td><input type="text" id="Price"></td>
+                    </tr>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="background:#FF9933"  class="btn" data-bs-dismiss="modal" onclick="Close()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    function viewDetails(e) {
+        console.log(e);
+        var id = e;
+        $.ajax({
+            url: "@Url.Action("Details", "Product")",
+            dataType: "json",
+            type: "GET",          
+            data: { "Id": id },
+            success: function (data) {
+                console.log(data)
+
+                $("#Name").val(data.name);
+                $("#CatName").val(data.category.name);
+                $("#Start").val(data.startDate);
+                $("#Creation").val(data.creationDate);
+                $("#Duration").val(data.duration);
+                $("#Price").val(data.price);
+                $(".modal").show();
+            },
+            error: function (xhr, exception, thrownError) {
+                console.log("error");
+
+
+            }
+        });
+    }
+
+
+    function Close() {
+        $(".modal").hide();
+    };
+
+    $(window).on("click", function (event) {
+        if ($(event.target).hasClass("modal")) {
+            $(".modal").hide();
+        }
+    });
+</script>
+
+
+
+
+
+
+

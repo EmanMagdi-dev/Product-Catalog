@@ -1,0 +1,77 @@
+﻿@model Product_Catalog.DTOs.ProductDTO
+
+@{
+    ViewData["Title"] = "Create";
+
+  
+    var jsonCategories = Context.Session.GetString("Categories");
+    var categories = string.IsNullOrEmpty(jsonCategories)
+        ? new List<SelectListItem>()
+        : System.Text.Json.JsonSerializer.Deserialize<List<SelectListItem>>(jsonCategories);
+
+}
+<link href="/css/FormStyle.css" rel="stylesheet" />
+<div class="row">
+    <div class="col-md-6 m-auto text-center">
+        <h4>Create New Product</h4>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 m-auto">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreationDate" class="control-label"></label>
+                <input asp-for="CreationDate" class="form-control" />
+                <span asp-validation-for="CreationDate" class="text-danger"></span>
+            </div>
+      @*       <div class="form-group">
+                <label asp-for="CreatedByUserId" class="control-label"></label>
+                <input asp-for="CreatedByUserId" class="form-control" />
+                <span asp-validation-for="CreatedByUserId" class="text-danger"></span>
+            </div> *@
+            <div class="form-group">
+                <label asp-for="StartDate" class="control-label"></label>
+                <input asp-for="StartDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Duration" class="control-label"></label>
+                <input asp-for="Duration" class="form-control" />
+                <span asp-validation-for="Duration" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImagePath"  class="control-label"></label>
+                <input type="file" asp-for="ImagePath" name="ImagePath" class="form-control" multiple />
+                <span asp-validation-for="ImagePath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryId" class="control-label"></label>
+                <select asp-for="CategoryId" class="form-control" asp-items="categories"></select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn" style="background-color:#FF9933">Submit</button>
+                <button class="btn" style="background-color:#FF9933"> <a asp-action="Index">Back</a></button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+   
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
